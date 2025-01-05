@@ -1,0 +1,21 @@
+FROM registry.opensuse.org/opensuse/distrobox:latest
+
+RUN zypper --non-interactive refresh
+RUN zypper --non-interactive dup
+# Install dependencies
+RUN zypper --non-interactive install -y --solver-focus installed webkit2gtk3-devel libopenssl-devel curl wget file libappindicator3-1 librsvg-devel
+RUN zypper --non-interactive install -y --solver-focus installed -t pattern devel_basis
+
+# Install java
+RUN zypper --non-interactive install -y --solver-focus installed java-21-openjdk java-21-openjdk-src
+
+# Install starship
+RUN curl -sS https://starship.rs/install.sh | sh -s -- -y
+
+# Use the host install of podman
+RUN ln -s /usr/bin/distrobox-host-exec /usr/local/bin/podman
+
+# Copy container setup files
+RUN mkdir -p /usr/local/container-setup
+COPY ./res/* /usr/local/container-setup
+RUN chmod +x /usr/local/container-setup/dev-box-setup

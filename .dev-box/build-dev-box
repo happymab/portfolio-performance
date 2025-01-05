@@ -1,0 +1,13 @@
+#! /usr/bin/sh
+
+box_name="dev-box-pp"
+source_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+# Build dev box image
+podman build --pull="newer" -f "${source_dir}"/Containerfile -t="${box_name}"
+
+# Create dev box
+distrobox create --name "${box_name}" --home "${HOME}/distrobox/home/${box_name}" --image "localhost/${box_name}:latest" --init-hooks "/usr/local/container-setup/dev-box-setup"
+
+# Start distrobox
+distrobox enter "${box_name}"

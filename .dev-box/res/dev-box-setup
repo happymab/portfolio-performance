@@ -1,0 +1,19 @@
+#! /usr/bin/sh
+
+if [[ ! -e ~/.dev-box-setup-done ]]; then
+    echo "Setting up dev box..."
+
+    # Starship configuration
+    mkdir -p ~/.config
+    cp /usr/local/container-setup/starship.toml ~/.config
+    echo 'eval "$(starship init bash)"' >> ~/.bashrc
+
+        # Make sure the permissions are set
+    chown -R mab:mab ~
+
+    # Flag dev box setup done
+    touch ~/.dev-box-setup-done
+    chown mab:mab ~/.dev-box-setup-done
+else 
+    echo "Dev-box setup already done."
+fi
